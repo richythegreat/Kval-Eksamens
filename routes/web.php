@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,3 +20,5 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('posts', ItemController::class)->middleware('auth');
 require __DIR__.'/auth.php';
+
+Route::resource('items', ItemController::class)->middleware('auth');
