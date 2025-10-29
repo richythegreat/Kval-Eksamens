@@ -44,13 +44,13 @@ class ItemController extends Controller
 
 
 
-    public function show(string $id)
+    public function show(Item $item)
     {
         return view('items.show', compact('item'));
     }
 
 
-    public function edit(string $id)
+    public function edit(Item $item)
     {
         // Ensure only the owner can edit
         if ($item->user_id !== Auth::id()) {
@@ -61,14 +61,49 @@ class ItemController extends Controller
     }
 
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, Item $item)
     {
-        //
+        if ($item->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'category' => 'required|string|max:100',
+            'status' => 'required|in:lost,found',
+            'city' => 'nullable|string|max:100',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            // delete old image if exists
+            if ($item->image) {
+                Storage::disk('public')->delete($item->image);
+            }
+            $validated['image'] = $request->file('image')->store('items', 'public');
+        }
+
+        $item->update($validated);
+
+        return redirect()->route('items.show', $item)->with('success', 'Post updated successfully!');
     }
 
-
-    public function destroy(string $id)
+    /**
+     * Remove the specified item from storage.
+     */
+    public function destroy(Item $item)
     {
-        //
+        if ($item->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if ($item->image) {
+            Storage::disk('public')->delete($item->image);
+        }
+
+        $item->delete();
+
+        return redirect()->route('items.index')->with('success', 'Post deleted successfully!');
     }
 }
