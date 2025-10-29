@@ -46,13 +46,18 @@ class ItemController extends Controller
 
     public function show(string $id)
     {
-        //
+        return view('items.show', compact('item'));
     }
 
 
     public function edit(string $id)
     {
-        //
+        // Ensure only the owner can edit
+        if ($item->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('items.edit', compact('item'));
     }
 
 
