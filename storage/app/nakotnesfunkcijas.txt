@@ -1,0 +1,60 @@
+1. Unikālas funkcionalitātes idejas (rare features)
+“Atbilstības paziņojumi” (Item Match Alert)
+
+Kad kāds ievieto jaunu postu, sistēma automātiski salīdzina nosaukumu / kategoriju ar citiem ierakstiem un piedāvā:
+“Iespējams, šī manta sakrīt ar tavu pazaudēto priekšmetu!”
+
+
+
+
+
+Tehniski viegli (vienkārša teksta salīdzināšana vai līdzības funkcija)
+Karte ar priekšmetu atrašanās vietām
+
+Integrē Leaflet.js vai Google Maps API, lai rādītu, kur priekšmets ir atrasts / pazaudēts.
+
+Katrs posts parādās ar pin uz kartes.
+
+Klikšķinot uz pin, parādās neliela kartiņa ar nosaukumu un pogu “Skatīt”.
+
+Izskatās ļoti profesionāli.
+
+
+
+
+Iespējams ar nelielu JavaScript + Laravel backend (saglabā latitude, longitude laukus).
+“Tikai īpašnieka apliecinājums”
+
+Kad cilvēks saka, ka manta ir viņa, viņam jāatbild uz jautājumu, piemēram:
+
+“Kāda krāsa bija tava somiņa?”
+“Kas bija iekšā?”
+
+Tas varētu būt formā vai čata logā — īpašnieks raksta atbildes, un atradējs redz, vai sakrīt.
+
+Viegli īstenot ar formu + čatu.
+Kartiņu “flip” efekts
+
+Kad pārvieto kursoru virs sludinājuma kartiņas — tā “apgriežas” un parāda vairāk info (piem., datumu, lietotāja vārdu, e-pastu).
+
+
+
+
+
+Izskatās iespaidīgi, viegli ar CSS/Alpine.js.
+Anonīmā čatošana
+
+Pirms lietotāji kļūst draugi, viņi var čatot ar segvārdu (piem., “Finder123”).
+Kad īpašnieks apstiprina, var atklāt vārdu.
+
+Viegli imitēt — datubāzē saglabā segvārdu.
+
+
+
+3. Tehniski iespaidīgas (bet reāli noderīgas) lietas
+
+PWA (Progressive Web App) – lapu var “uzinstalēt” uz telefona.
+
+Automātiska bilžu samazināšana (optimizācija serverī ar Intervention Image).
+
+“Mark as Returned” poga — kad manta ir atdota īpašniekam.
