@@ -77,7 +77,7 @@ class ItemController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // delete old image if exists
+
             if ($item->image) {
                 Storage::disk('public')->delete($item->image);
             }
@@ -89,9 +89,6 @@ class ItemController extends Controller
         return redirect()->route('items.show', $item)->with('success', 'Post updated successfully!');
     }
 
-    /**
-     * Remove the specified item from storage.
-     */
     public function destroy(Item $item)
     {
         if ($item->user_id !== Auth::id()) {
@@ -106,4 +103,6 @@ class ItemController extends Controller
 
         return redirect()->route('items.index')->with('success', 'Post deleted successfully!');
     }
+    public function search() {}
+    public function filter() {}
 }
