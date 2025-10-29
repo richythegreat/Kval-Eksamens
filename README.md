@@ -1,61 +1,91 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Lost & Found — Projekta ceļvedis
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Projekta apraksts
+**Lost & Found** ir tīmekļa lietotne, kas palīdz cilvēkiem atrast un atgūt pazaudētas mantas.
+Platforma ļauj lietotājiem:
+- publicēt paziņojumus par atrastām vai pazaudētām mantām,
+- meklēt citus paziņojumus ar filtriem,
+- un sazināties ar citiem lietotājiem privāti, ja ir atrasta vai atgūta manta.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Projekta mērķis
+Izveidot drošu, lietotājam draudzīgu sistēmu, kas apvieno cilvēkus, kuri ir pazaudējuši vai atraduši priekšmetus, vienā platformā, lai veicinātu mantu atgriešanu to īpašniekiem.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Galvenās funkcijas
 
-## Learning Laravel
+### Postu (ierakstu) pārvaldība
+- Lietotāji var izveidot jaunu postu (ierakstu) par pazaudētu vai atrastu mantu.
+- Ierakstam var pievienot attēlu vai atstāt bez attēla.
+- Postus var rediģēt un dzēst.
+- Ierakstos tiek norādīts statuss: “Meklē” vai “Atrasts”.
+- Ierakstiem var pievienot pilsētu, lai citi varētu filtrēt pēc lokācijas.
+- Postus var sakārtot pēc datuma (jaunākie/vecākie).
+- Ir iespēja kopīgot postu sociālajos tīklos.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Privātā čatošana
+- Kad lietotājs atrod savu mantu, viņš var privāti sazināties ar personu, kas to ievietoja.
+- Ziņas notiek drošā iekšējā čata sistēmā, nepublicējot kontaktinformāciju.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Meklēšana un filtrēšana
+- Lietotāji var izmantot meklēšanas joslu (search bar), lai atrastu noteiktus priekšmetus pēc nosaukuma vai apraksta.
+- Var filtrēt:
+  - pēc pilsētas,
+  - pēc statusa (*meklē* / *atrasts*),
+  - un pēc datuma.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Lietotāju konti
+- Ir reģistrācijas un pieteikšanās lapas.
+- Katram lietotājam ir profila lapa, kur redzami viņa ievietotie ieraksti.
+- Lietotājs var rediģēt profila informāciju un iestatījumus (piemēram, paziņojumu preferences).
+- Var pievienot administratora kontu, kas var pārvaldīt (dzēst vai rediģēt) citu lietotāju ierakstus un lietotājus.
 
-## Laravel Sponsors
+### Administratora funkcijas
+- Piekļuve administrācijas panelim.
+- Spēja pārskatīt, apstiprināt vai dzēst neatbilstošus ierakstus.
+- Pārvaldīt lietotājus un sistēmas iestatījumus.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## Tehniskā struktūra
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+| Komponente | Apraksts |
+|-------------|-----------|
+| Frameworks | Laravel 12 (PHP), Tailwind CSS |
+| Datubāze | MySQL |
+| Autentifikācija | Laravel Breeze (Blade + Alpine) |
+| Attēlu glabāšana | `storage/app/public/items` |
+| Modeļi | User, Item, Message, City |
+| Relācijas | `User` — `hasMany(Item)` ; `Item` — `belongsTo(User)` ; `User` — `hasMany(Message)` |
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Papildu funkcionalitāte
+- “Atzīmēt kā atrisinātu” poga, kad manta atgūta.
+- Statistika: biežākās mantu kategorijas, aktīvākās pilsētas.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Drošība un lietojamība
+- Droša lietotāju datu apstrāde .
+- Attēlu tipa un izmēra pārbaude pirms augšupielādes.
+- Responsīvs dizains .
+.
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Plānotā izstrādes secība
+1. Projekta izveide (Laravel instalācija, Breeze auth)
+2. Modeļu un migrāciju izveide (Users, Items, Messages)
+3. CRUD sistēma ierakstiem
+4. Meklēšana un filtrēšana
+5. Čata funkcionalitāte
+6. Profila un administratora panelis
+7. Testēšana un UI uzlabojumi
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Rezultāts
+Gala produkts būs funkcionāla **Lost & Found** platforma, kur lietotāji var ērti ievietot, meklēt un pārvaldīt pazaudēto un atrasto mantu paziņojumus, kā arī sazināties droši platformas ietvaros.
