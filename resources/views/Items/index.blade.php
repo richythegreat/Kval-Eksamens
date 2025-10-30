@@ -8,28 +8,7 @@
                + Add New Post
             </a>
         </div>
-            <form method="GET" action="{{ route('items.index') }}" class="mb-6 flex items-center justify-between gap-3">
-                <input
-                    type="text"
-                    name="query"
-                    value="{{ request('query') }}"
-                    placeholder="Search items..."
-                    class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-
-                >
-                @if (request('query'))
-                <a href="{{ route('items.index') }}" class="text-sm text-gray-500 hover:underline">
-                Clear search
-                @endif
-                </a>
-                <button
-                    type="submit"
-                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                 Search
-                </button>
-
-            </form>
+            
 
         @if ($items->count())
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
