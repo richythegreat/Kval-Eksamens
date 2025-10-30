@@ -15,9 +15,27 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
+
+
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
-
+            @if (session('success'))
+            <div
+                x-data="{ show: true }"
+                x-init="setTimeout(() => show = false, 5000)"
+                x-show="show"
+                x-transition:enter="transform ease-out duration-300 transition"
+                x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+                x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                class="fixed top-20 right-4 bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg"
+                style="z-index: 9999;"
+            >
+                {{ session('success') }}
+            </div>
+        @endif
             <!-- Page Heading -->
             @isset($header)
                 <header class="bg-white shadow">
@@ -29,8 +47,10 @@
 
             <!-- Page Content -->
             <main>
+
                 {{ $slot }}
             </main>
         </div>
+
     </body>
 </html>
