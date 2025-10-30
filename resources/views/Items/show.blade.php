@@ -19,6 +19,11 @@
 
             @if ($item->user_id === auth()->id())
                 <a href="{{ route('items.edit', $item->id) }}" class="text-yellow-600 hover:underline">Edit</a>
+                <form action="{{ route('items.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Delete this post?')" class="inline">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                </form>
             @endif
         </div>
     </div>
