@@ -7,35 +7,35 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
-
-
 class ItemController extends Controller
 {
-
     public function index(Request $request)
     {
         $query = Item::query();
 
+        if ($search = $request->input('query')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('city', 'like', "%{$search}%");
+            });
+        }
 
-    if ($search = $request->input('query')) {
-        $query->where(function($q) use ($search) {
-            $q->where('title', 'like', "%{$search}%")
-              ->orWhere('description', 'like', "%{$search}%")
-              ->orWhere('city', 'like', "%{$search}%");
-        });
+        $items = $query->latest()->paginate(10);
+
+        return view('items.index', compact('items'));
     }
-
-    $items = $query->latest()->paginate(10);
-
-    return view('items.index', compact('items'));
-    }
-
 
     public function create()
     {
-        return view('items.create');
-    }
+        $cities = json_decode(file_get_contents(resource_path('data/latvian_cities.json')), true);
 
+        if (!$cities) {
+            $cities = ['Rīga', 'Daugavpils', 'Liepāja', 'Jelgava', 'Jūrmala'];
+        }
+
+        return view('items.create', compact('cities'));
+    }
 
     public function store(Request $request)
     {
@@ -59,24 +59,25 @@ class ItemController extends Controller
         return redirect()->route('items.index')->with('success', 'Post created successfully!');
     }
 
-
-
     public function show(Item $item)
     {
         return view('items.show', compact('item'));
     }
 
-
     public function edit(Item $item)
     {
-        // Ensure only the owner can edit
         if ($item->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
 
-        return view('items.edit', compact('item'));
-    }
+        $cities = json_decode(file_get_contents(resource_path('resources/data/latvian_cities.json')), true);
 
+        // if (!$cities) {
+        //     $cities = ['Rīga', 'Daugavpils', 'Liepāja', 'Jelgava', 'Jūrmala'];
+        // }
+
+        return view('items.edit', compact('item', 'cities'));
+    }
 
     public function update(Request $request, Item $item)
     {
@@ -94,7 +95,6 @@ class ItemController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-
             if ($item->image) {
                 Storage::disk('public')->delete($item->image);
             }
