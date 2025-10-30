@@ -12,10 +12,22 @@ use Illuminate\Support\Facades\Storage;
 class ItemController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::latest()->paginate(10);
-        return view('items.index', compact('items'));
+        $query = Item::query();
+
+
+    if ($search = $request->input('query')) {
+        $query->where(function($q) use ($search) {
+            $q->where('title', 'like', "%{$search}%")
+              ->orWhere('description', 'like', "%{$search}%")
+              ->orWhere('city', 'like', "%{$search}%");
+        });
+    }
+
+    $items = $query->latest()->paginate(10);
+
+    return view('items.index', compact('items'));
     }
 
 
@@ -108,6 +120,4 @@ class ItemController extends Controller
 
         return redirect()->route('items.index')->with('success', 'Post deleted successfully!');
     }
-    public function search() {}
-    public function filter() {}
 }
