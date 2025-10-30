@@ -2,13 +2,6 @@
     <div class="max-w-5xl mx-auto py-10 px-4">
         <h1 class="text-2xl font-bold mb-6 text-center">Lost & Found Posts</h1>
 
-        {{-- Flash message --}}
-        @if (session('success'))
-            <div class="bg-green-100 text-green-800 p-3 rounded mb-4">
-                {{ session('success') }}
-            </div>
-        @endif
-
         <div class="text-right mb-4">
             <a href="{{ route('items.create') }}"
                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
