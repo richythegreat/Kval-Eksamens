@@ -70,7 +70,7 @@ class ItemController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $cities = json_decode(file_get_contents(resource_path('resources/data/latvian_cities.json')), true);
+        $cities = json_decode(file_get_contents(resource_path('data/latvian_cities.json')), true);
 
         // if (!$cities) {
         //     $cities = ['Rīga', 'Daugavpils', 'Liepāja', 'Jelgava', 'Jūrmala'];
