@@ -17,5 +17,6 @@ class Item extends Model
         'city',
         'image',
         'user_id',
+        
     ];
 }
