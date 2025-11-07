@@ -4,6 +4,7 @@
 Kad kāds ievieto jaunu postu, sistēma automātiski salīdzina nosaukumu / kategoriju ar citiem ierakstiem un piedāvā:
 “Iespējams, šī manta sakrīt ar tavu pazaudēto priekšmetu!”
 
+izpētīt full text search iespējas salīdzināt 2 tekstus
 
 
 
