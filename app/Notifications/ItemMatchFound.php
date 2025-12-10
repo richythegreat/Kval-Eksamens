@@ -46,17 +46,13 @@ class ItemMatchFound extends Notification
 
     $validated['user_id'] = Auth::id();
 
-    // Save the new item
     $item = Item::create($validated);
 
-    // ------- SIMPLE MATCHING LOGIC (FREE, NO LIBRARY) -------
 
-    // We only try to match if we have city & category
     if ($item->city && $item->category) {
 
         $oppositeStatus = $item->status === 'lost' ? 'found' : 'lost';
 
-        // Only compare items in same city & category
         $others = Item::where('status', $oppositeStatus)
             ->where('city', $item->city)
             ->where('category', $item->category)
@@ -69,9 +65,7 @@ class ItemMatchFound extends Notification
 
             $score = $this->simpleTextSimilarity($text1, $text2);
 
-            // threshold: 0.3 ~ 0.4 is usually good
             if ($score >= 0.35) {
-                // notify the owner of the *other* item
                 $other->user->notify(new ItemMatchFound($item));
             }
         }
