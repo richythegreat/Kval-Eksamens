@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\ItemMatchFound;
-
+use Illuminate\Validation\Rule;
 
 class ItemController extends Controller
 {
@@ -18,8 +18,8 @@ class ItemController extends Controller
         if ($search = $request->input('query')) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhere('city', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('city', 'like', "%{$search}%");
             });
         }
 
@@ -30,61 +30,56 @@ class ItemController extends Controller
 
     public function create()
     {
-        $cities = json_decode(file_get_contents(resource_path('data/latvian_cities.json')), true);
-
-        if (!$cities) {
-            $cities = ['Rīga', 'Daugavpils', 'Liepāja', 'Jelgava', 'Jūrmala'];
-        }
+        $cities = $this->loadAllLocations();
 
         return view('items.create', compact('cities'));
     }
 
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required|string',
-        'category' => 'required|string|max:100',
-        'status' => 'required|in:lost,found',
-        'city' => 'nullable|string|max:100',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-    ]);
+    {
+        $validLocations = $this->loadAllLocations();
 
-    if ($request->hasFile('image')) {
-        $validated['image'] = $request->file('image')->store('items', 'public');
-    }
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'category' => 'required|string|max:100',
+            'status' => 'required|in:lost,found',
+            'city' => ['required', Rule::in($validLocations)],
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
 
-    $validated['user_id'] = Auth::id();
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('items', 'public');
+        }
 
-    $item = Item::create($validated);
+        $validated['user_id'] = Auth::id();
 
+        $item = Item::create($validated);
 
-    if ($item->city && $item->category) {
+        //"AI-LIKE" MATCHING + NOTIFICATIONS
+        if ($item->city && $item->category) {
+            $oppositeStatus = $item->status === 'lost' ? 'found' : 'lost';
 
-        $oppositeStatus = $item->status === 'lost' ? 'found' : 'lost';
+            $others = Item::where('status', $oppositeStatus)
+                ->where('city', $item->city)
+                ->where('category', $item->category)
+                ->where('id', '!=', $item->id)
+                ->get();
 
-        $others = Item::where('status', $oppositeStatus)
-            ->where('city', $item->city)
-            ->where('category', $item->category)
-            ->where('id', '!=', $item->id)
-            ->get();
+            foreach ($others as $other) {
+                $text1 = $item->title . ' ' . $item->description;
+                $text2 = $other->title . ' ' . $other->description;
 
-        foreach ($others as $other) {
-            $text1 = $item->title . ' ' . $item->description;
-            $text2 = $other->title . ' ' . $other->description;
+                $score = $this->simpleTextSimilarity($text1, $text2);
 
-            $score = $this->simpleTextSimilarity($text1, $text2);
-
-            
-            if ($score >= 0.35) {
-                $other->user->notify(new ItemMatchFound($item));
+                if ($score >= 0.35 && $other->user) {
+                    $other->user->notify(new ItemMatchFound($item));
+                }
             }
         }
+
+        return redirect()->route('items.index')->with('success', 'Post created successfully!');
     }
-
-    return redirect()->route('items.index')->with('success', 'Post created successfully!');
-}
-
 
     public function show(Item $item)
     {
@@ -97,9 +92,7 @@ class ItemController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $cities = json_decode(file_get_contents(resource_path('data/latvian_cities.json')), true);
-
-        
+        $cities = $this->loadAllLocations();
 
         return view('items.edit', compact('item', 'cities'));
     }
@@ -110,12 +103,14 @@ class ItemController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        $validLocations = $this->loadAllLocations();
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'category' => 'required|string|max:100',
             'status' => 'required|in:lost,found',
-            'city' => 'nullable|string|max:100',
+            'city' => ['required', Rule::in($validLocations)],
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -145,37 +140,46 @@ class ItemController extends Controller
 
         return redirect()->route('items.index')->with('success', 'Post deleted successfully!');
     }
+
     private function simpleTextSimilarity(string $a, string $b): float
-{
-    $a = mb_strtolower($a);
-    $b = mb_strtolower($b);
+    {
+        $a = mb_strtolower($a);
+        $b = mb_strtolower($b);
 
-    $a = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $a);
-    $b = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $b);
+        $a = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $a);
+        $b = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $b);
 
-    $wordsA = preg_split('/\s+/', $a, -1, PREG_SPLIT_NO_EMPTY);
-    $wordsB = preg_split('/\s+/', $b, -1, PREG_SPLIT_NO_EMPTY);
+        $wordsA = preg_split('/\s+/', $a, -1, PREG_SPLIT_NO_EMPTY);
+        $wordsB = preg_split('/\s+/', $b, -1, PREG_SPLIT_NO_EMPTY);
 
-    $stop = ['un', 'vai', 'and', 'the', 'a', 'an', 'ir', 'kas', 'ar'];
-    $filter = function ($w) use ($stop) {
-        return mb_strlen($w) > 2 && !in_array($w, $stop);
-    };
+        $stop = ['un', 'vai', 'and', 'the', 'a', 'an', 'ir', 'kas', 'ar'];
+        $filter = function ($w) use ($stop) {
+            return mb_strlen($w) > 2 && !in_array($w, $stop);
+        };
 
-    $wordsA = array_values(array_filter($wordsA, $filter));
-    $wordsB = array_values(array_filter($wordsB, $filter));
+        $wordsA = array_values(array_filter($wordsA, $filter));
+        $wordsB = array_values(array_filter($wordsB, $filter));
 
-    if (empty($wordsA) || empty($wordsB)) {
-        return 0;
+        if (empty($wordsA) || empty($wordsB)) {
+            return 0;
+        }
+
+        $uniqueA = array_unique($wordsA);
+        $uniqueB = array_unique($wordsB);
+
+        $common = array_intersect($uniqueA, $uniqueB);
+
+        $score = count($common) / max(count($uniqueA), count($uniqueB));
+
+        return $score;
     }
 
-    $uniqueA = array_unique($wordsA);
-    $uniqueB = array_unique($wordsB);
+    private function loadAllLocations(): array
+    {
+        $cities = json_decode(@file_get_contents(resource_path('data/latvian_cities.json')), true) ?? [];
+        $villages = json_decode(@file_get_contents(resource_path('data/latvian_villages.json')), true) ?? [];
+        $municipalities = json_decode(@file_get_contents(resource_path('data/latvian_municipalities.json')), true) ?? [];
 
-    $common = array_intersect($uniqueA, $uniqueB);
-
-    $score = count($common) / max(count($uniqueA), count($uniqueB));
-
-    return $score; 
-}
-
+        return array_values(array_unique(array_merge($cities, $villages, $municipalities)));
+    }
 }
