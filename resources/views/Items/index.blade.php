@@ -1,43 +1,80 @@
+{{-- resources/views/Items/index.blade.php --}}
 <x-app-layout>
-    <div class="max-w-5xl mx-auto py-10 px-4">
-        <h1 class="text-2xl font-bold mb-6 text-center">Lost & Found Posts</h1>
+    <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+        {{-- Toolbar --}}
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+            <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+                Lost &amp; Found Posts
+            </h1>
 
-        <div class="text-right mb-4">
             <a href="{{ route('items.create') }}"
-               class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-               + Add New Post
+               class="inline-flex items-center justify-center px-4 py-2 rounded-full text-sm font-medium
+                      bg-white text-black hover:bg-white/90 transition ring-1 ring-white/10">
+                + Add New Post
             </a>
         </div>
-            
 
         @if ($items->count())
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($items as $item)
-                    <div class="bg-white shadow rounded-lg overflow-hidden">
+                    <div class="group rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10 backdrop-blur-xl
+                                transition transform hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/30">
+                        {{-- Media --}}
                         @if ($item->image)
-                            <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-48 object-cover" alt="Image">
+                            <div class="relative">
+                                <img src="{{ asset('storage/' . $item->image) }}"
+                                     alt="Image"
+                                     class="w-full h-48 object-cover">
+                                <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-70"></div>
+                            </div>
                         @else
-                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+                            <div class="w-full h-48 bg-white/5 ring-1 ring-inset ring-white/10 grid place-items-center text-white/50 text-sm">
                                 No Image
                             </div>
                         @endif
 
+                        {{-- Content --}}
                         <div class="p-4">
-                            <h2 class="text-xl font-semibold mb-1">{{ $item->title }}</h2>
-                            <p class="text-gray-600 text-sm mb-2">
-                                {{ ucfirst($item->status) }} — {{ $item->city ?? 'Unknown city' }}
-                            </p>
-                            <p class="text-gray-700 mb-4">{{ Str::limit($item->description, 100) }}</p>
+                            <h2 class="text-lg font-semibold text-white mb-2 line-clamp-1">{{ $item->title }}</h2>
 
-                            <div class="flex justify-between text-sm">
-                                <a href="{{ route('items.show', $item->id) }}" class="text-blue-600 hover:underline">View</a>
+                            {{-- Meta --}}
+                            <div class="flex items-center gap-2 text-xs mb-3">
+                                <span class="px-2 py-1 rounded-full ring-1 ring-white/10 bg-white/5 text-white/80">
+                                    {{ ucfirst($item->status) }}
+                                </span>
+                                <span class="px-2 py-1 rounded-full ring-1 ring-white/10 text-white/60">
+                                    {{ $item->city ?? 'Unknown city' }}
+                                </span>
+                            </div>
+
+                            <p class="text-sm text-white/70 mb-4">
+                                {{ Str::limit($item->description, 120) }}
+                            </p>
+
+                            {{-- Actions --}}
+                            <div class="flex items-center justify-between text-sm">
+                                <a href="{{ route('items.show', $item->id) }}"
+                                   class="px-3 py-1.5 rounded-full bg-white text-black ring-1 ring-white/10 hover:bg-white/90 transition">
+                                    View
+                                </a>
+
                                 @if ($item->user_id === auth()->id())
-                                    <a href="{{ route('items.edit', $item->id) }}" class="text-yellow-600 hover:underline">Edit</a>
-                                    <form action="{{ route('items.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Delete this post?')" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:underline">Delete</button>
-                                    </form>
+                                    <div class="flex items-center gap-3">
+                                        <a href="{{ route('items.edit', $item->id) }}"
+                                           class="px-3 py-1.5 rounded-full ring-1 ring-white/10 text-amber-300/90 hover:bg-white/10 transition">
+                                            Edit
+                                        </a>
+
+                                        <form action="{{ route('items.destroy', $item->id) }}" method="POST"
+                                              onsubmit="return confirm('Delete this post?')" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="px-3 py-1.5 rounded-full ring-1 ring-white/10 text-rose-300/90 hover:bg-white/10 transition">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -45,11 +82,12 @@
                 @endforeach
             </div>
 
-            <div class="mt-6">
+            {{-- Pagination --}}
+            <div class="mt-8 flex justify-center">
                 {{ $items->links() }}
             </div>
         @else
-            <p class="text-gray-500 text-center">No posts yet.</p>
+            <p class="text-white/60 text-center">No posts yet.</p>
         @endif
     </div>
 </x-app-layout>
