@@ -45,4 +45,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function conversations()
+{
+    return $this->belongsToMany(\App\Models\Conversation::class);
+}
+
+public function messages()
+{
+    return $this->hasMany(\App\Models\Message::class);
+}
+
+
 }
