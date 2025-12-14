@@ -107,7 +107,18 @@ class ConversationController extends Controller
         'body' => $validated['body'],
     ]);
 
-    // Return JSON for AJAX
+    // Notify the other user (not sender)
+    $otherUser = $conversation->users()->where('users.id', '!=', $userId)->first();
+    if ($otherUser) {
+        $preview = mb_substr($message->body, 0, 60);
+        $otherUser->notify(new NewMessageNotification(
+            conversationId: $conversation->id,
+            senderName: Auth::user()->name,
+            preview: $preview
+        ));
+    }
+
+    // If you're using AJAX, return JSON:
     return response()->json([
         'id' => $message->id,
         'body' => $message->body,
@@ -117,3 +128,5 @@ class ConversationController extends Controller
 }
 
 }
+
+
