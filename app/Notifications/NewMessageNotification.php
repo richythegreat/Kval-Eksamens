@@ -15,18 +15,18 @@ class NewMessageNotification extends Notification
         public string $preview
     ) {}
 
-    public function via($notifiable)
+    public function via($notifiable): array
     {
         return ['database'];
     }
 
-    public function toDatabase($notifiable)
+    public function toDatabase($notifiable): array
     {
         return [
-            'type' => 'message',
-            'message' => "New message from {$this->senderName}",
+            'type'            => 'message',
+            'message'         => "New message from {$this->senderName}",
             'conversation_id' => $this->conversationId,
-            'preview' => $this->preview,
-        ];
+            'preview'         => $this->preview,
+            'url'             => route('conversations.show', $this->conversationId),
     }
 }
