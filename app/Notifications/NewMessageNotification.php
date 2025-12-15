@@ -27,6 +27,7 @@ class NewMessageNotification extends Notification
             'message'         => "New message from {$this->senderName}",
             'conversation_id' => $this->conversationId,
             'preview'         => $this->preview,
-            'url'             => route('conversations.show', $this->conversationId),
-    }
+            'url'             => route('conversations.show', $this->conversationId)
+        ];
+}
 }
