@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Services\LocationService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -11,175 +14,120 @@ use Illuminate\Validation\Rule;
 
 class ItemController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): View
     {
-        $query = Item::query();
-
-        if ($search = $request->input('query')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%")
-                    ->orWhere('city', 'like', "%{$search}%");
-            });
-        }
-
-        $items = $query->latest()->paginate(10);
+        $items = Item::query()
+            ->when(method_exists(Item::class, 'scopeSearch'),
+                fn ($q) => $q->search($request->string('query')),
+                fn ($q) => $this->applyFallbackSearch($q, $request->string('query'))
+            )
+            ->latest()
+            ->paginate(10);
 
         return view('items.index', compact('items'));
     }
 
-    public function create()
+    public function create(): View
     {
-        $cities = $this->loadAllLocations();
-
+        $cities = LocationService::all();
         return view('items.create', compact('cities'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        $validLocations = $this->loadAllLocations();
-
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'category' => 'required|string|max:100',
-            'status' => 'required|in:lost,found',
-            'city' => ['required', Rule::in($validLocations)],
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        $locations = LocationService::all();
+        $data = $this->validateItem($request, $locations);
+        $data['user_id'] = Auth::id();
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('items', 'public');
+            $data['image'] = $request->file('image')->store('items', 'public');
         }
 
-        $validated['user_id'] = Auth::id();
+        $item = Item::create($data);
 
-        $item = Item::create($validated);
-
-        //"AI-LIKE" MATCHING + NOTIFICATIONS
-        if ($item->city && $item->category) {
-            $oppositeStatus = $item->status === 'lost' ? 'found' : 'lost';
-
-            $others = Item::where('status', $oppositeStatus)
-                ->where('city', $item->city)
-                ->where('category', $item->category)
-                ->where('id', '!=', $item->id)
-                ->get();
-
-            foreach ($others as $other) {
-                $text1 = $item->title . ' ' . $item->description;
-                $text2 = $other->title . ' ' . $other->description;
-
-                $score = $this->simpleTextSimilarity($text1, $text2);
-
-                if ($score >= 0.35 && $other->user) {
-                    $other->user->notify(new ItemMatchFound($item));
-                }
-            }
-        }
-
-        return redirect()->route('items.index')->with('success', 'Post created successfully!');
+        return redirect()
+            ->route('items.index')
+            ->with('success', 'Post created successfully!');
     }
 
-    public function show(Item $item)
+    public function show(Item $item): View
     {
         return view('items.show', compact('item'));
     }
 
-    public function edit(Item $item)
+    public function edit(Item $item): View
     {
-        if ($item->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $cities = $this->loadAllLocations();
+        abort_unless($item->user_id === Auth::id(), 403);
+        $cities = LocationService::all();
 
         return view('items.edit', compact('item', 'cities'));
     }
 
-    public function update(Request $request, Item $item)
+    public function update(Request $request, Item $item): RedirectResponse
     {
-        if ($item->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
+        abort_unless($item->user_id === Auth::id(), 403);
 
-        $validLocations = $this->loadAllLocations();
-
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'category' => 'required|string|max:100',
-            'status' => 'required|in:lost,found',
-            'city' => ['required', Rule::in($validLocations)],
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        $locations = LocationService::all();
+        $data = $this->validateItem($request, $locations);
 
         if ($request->hasFile('image')) {
-            if ($item->image) {
-                Storage::disk('public')->delete($item->image);
+            $new = $request->file('image')->store('items', 'public');
+            $old = $item->image;
+            $data['image'] = $new;
+
+            $item->update($data);
+
+            if ($old) {
+                try { Storage::disk('public')->delete($old); } catch (\Throwable) {}
             }
-            $validated['image'] = $request->file('image')->store('items', 'public');
+        } else {
+            $item->update($data);
         }
 
-        $item->update($validated);
-
-        return redirect()->route('items.show', $item)->with('success', 'Post updated successfully!');
+        return redirect()
+            ->route('items.show', $item)
+            ->with('success', 'Post updated successfully!');
     }
 
-    public function destroy(Item $item)
+    public function destroy(Item $item): RedirectResponse
     {
-        if ($item->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
+        abort_unless($item->user_id === Auth::id(), 403);
 
-        if ($item->image) {
-            Storage::disk('public')->delete($item->image);
-        }
-
+        $old = $item->image;
         $item->delete();
 
-        return redirect()->route('items.index')->with('success', 'Post deleted successfully!');
-    }
-
-    private function simpleTextSimilarity(string $a, string $b): float
-    {
-        $a = mb_strtolower($a);
-        $b = mb_strtolower($b);
-
-        $a = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $a);
-        $b = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $b);
-
-        $wordsA = preg_split('/\s+/', $a, -1, PREG_SPLIT_NO_EMPTY);
-        $wordsB = preg_split('/\s+/', $b, -1, PREG_SPLIT_NO_EMPTY);
-
-        $stop = ['un', 'vai', 'and', 'the', 'a', 'an', 'ir', 'kas', 'ar'];
-        $filter = function ($w) use ($stop) {
-            return mb_strlen($w) > 2 && !in_array($w, $stop);
-        };
-
-        $wordsA = array_values(array_filter($wordsA, $filter));
-        $wordsB = array_values(array_filter($wordsB, $filter));
-
-        if (empty($wordsA) || empty($wordsB)) {
-            return 0;
+        if ($old) {
+            try { Storage::disk('public')->delete($old); } catch (\Throwable) {}
         }
 
-        $uniqueA = array_unique($wordsA);
-        $uniqueB = array_unique($wordsB);
-
-        $common = array_intersect($uniqueA, $uniqueB);
-
-        $score = count($common) / max(count($uniqueA), count($uniqueB));
-
-        return $score;
+        return redirect()
+            ->route('items.index')
+            ->with('success', 'Post deleted successfully!');
     }
 
-    private function loadAllLocations(): array
+    private function validateItem(Request $request, array $validLocations): array
     {
-        $cities = json_decode(@file_get_contents(resource_path('data/latvian_cities.json')), true) ?? [];
-        $villages = json_decode(@file_get_contents(resource_path('data/latvian_villages.json')), true) ?? [];
-        $municipalities = json_decode(@file_get_contents(resource_path('data/latvian_municipalities.json')), true) ?? [];
+        return $request->validate([
+            'title'       => ['required','string','max:255'],
+            'description' => ['required','string'],
+            'category'    => ['required','string','max:100'],
+            'status'      => ['required', Rule::in(['lost','found'])],
+            'city'        => ['required', Rule::in($validLocations)],
+            'image'       => ['nullable','image','mimes:jpg,jpeg,png','max:2048'],
+        ]);
+    }
 
-        return array_values(array_unique(array_merge($cities, $villages, $municipalities)));
+    private function applyFallbackSearch($query, ?string $term)
+    {
+        $term = trim((string) $term);
+        if ($term === '') return $query;
+
+        $like = '%' . str_replace(['%','_'], ['\%','\_'], $term) . '%';
+
+        return $query->where(function ($q) use ($like) {
+            $q->where('title', 'like', $like)
+              ->orWhere('description', 'like', $like)
+              ->orWhere('city', 'like', $like);
+        });
     }
 }
