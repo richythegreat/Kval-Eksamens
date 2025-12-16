@@ -4,7 +4,7 @@
 **Lost & Found** ir tīmekļa lietotne, kas palīdz cilvēkiem atrast un atgūt pazaudētas mantas.
 Platforma ļauj lietotājiem:
 - publicēt paziņojumus par atrastām vai pazaudētām mantām,
-- meklēt citus paziņojumus ar filtriem,
+- meklēt citus paziņojumus,
 - un sazināties ar citiem lietotājiem privāti, ja ir atrasta vai atgūta manta.
 
 ---
@@ -20,45 +20,42 @@ Izveidot drošu, lietotājam draudzīgu sistēmu, kas apvieno cilvēkus, kuri ir
 - Lietotāji var izveidot jaunu postu (ierakstu) par pazaudētu vai atrastu mantu.
 - Ierakstam var pievienot attēlu vai atstāt bez attēla.
 - Postus var rediģēt un dzēst.
-- Ierakstos tiek norādīts statuss: “Meklē” vai “Atrasts”.
-- Ierakstiem var pievienot pilsētu, lai citi varētu filtrēt pēc lokācijas.
-- Postus var sakārtot pēc datuma (jaunākie/vecākie).
-- Ir iespēja kopīgot postu sociālajos tīklos.
+- Ierakstos tiek norādīts statuss: “Lost” vai “Found”.
+- Ierakstiem var pievienot pilsētu..
 
 ### Privātā čatošana
 - Kad lietotājs atrod savu mantu, viņš var privāti sazināties ar personu, kas to ievietoja.
 - Ziņas notiek drošā iekšējā čata sistēmā, nepublicējot kontaktinformāciju.
 
-### Meklēšana un filtrēšana
+### Meklēšana 
 - Lietotāji var izmantot meklēšanas joslu (search bar), lai atrastu noteiktus priekšmetus pēc nosaukuma vai apraksta.
-- Var filtrēt:
-  - pēc pilsētas,
-  - pēc statusa (*meklē* / *atrasts*),
-  - un pēc datuma.
+
 
 ### Lietotāju konti
 - Ir reģistrācijas un pieteikšanās lapas.
-- Katram lietotājam ir profila lapa, kur redzami viņa ievietotie ieraksti.
-- Lietotājs var rediģēt profila informāciju un iestatījumus (piemēram, paziņojumu preferences).
-- Var pievienot administratora kontu, kas var pārvaldīt (dzēst vai rediģēt) citu lietotāju ierakstus un lietotājus.
+- Katram lietotājam ir profila lapa.
+- Lietotājs var rediģēt profila informāciju un iestatījumus.
 
-### Administratora funkcijas
-- Piekļuve administrācijas panelim.
-- Spēja pārskatīt, apstiprināt vai dzēst neatbilstošus ierakstus.
-- Pārvaldīt lietotājus un sistēmas iestatījumus.
 
 ---
 
 ## Tehniskā struktūra
 
-| Komponente | Apraksts |
-|-------------|-----------|
-| Frameworks | Laravel 12 (PHP), Tailwind CSS |
-| Datubāze | MySQL |
-| Autentifikācija | Laravel Breeze (Blade + Alpine) |
-| Attēlu glabāšana | `storage/app/public/items` |
-| Modeļi | User, Item, Message, City |
-| Relācijas | `User` — `hasMany(Item)` ; `Item` — `belongsTo(User)` ; `User` — `hasMany(Message)` |
+Laravel 12 (PHP) – MVC arhitektūra, drošība, validācija
+
+Laravel Breeze – autentifikācija (login / register)
+
+SQLite – vienkārša datubāze izstrādei
+
+Blade templates – UI veidošana
+
+Tailwind CSS – ātrs un responsīvs dizains
+
+Alpine.js – interaktivitāte (dropdown, notifikācijas, AJAX)
+
+Laravel Notifications – sistēmas paziņojumi
+
+GitHub – versiju kontrole
 
 ---
 
@@ -82,7 +79,7 @@ Izveidot drošu, lietotājam draudzīgu sistēmu, kas apvieno cilvēkus, kuri ir
 3. CRUD sistēma ierakstiem
 4. Meklēšana un filtrēšana
 5. Čata funkcionalitāte
-6. Profila un administratora panelis
+6. Profila panelis
 7. Testēšana un UI uzlabojumi
 
 ---
