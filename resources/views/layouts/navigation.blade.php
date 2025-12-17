@@ -64,7 +64,7 @@
                     </div>
                 </form>
 
-                {{-- Notifications --}}
+                {{-- Notifications (dark-only, single badge + links) --}}
                 @auth
                     @php
                         $unreadCount = Auth::user()->unreadNotifications()->count();
@@ -72,79 +72,109 @@
                     @endphp
 
                     <x-dropdown align="right" width="80">
+                        {{-- Trigger --}}
                         <x-slot name="trigger">
-                            <button class="relative p-2 rounded-lg hover:bg-gray-100 text-gray-700 dark:hover:bg-white/10 dark:text-white" aria-label="Notifications">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                            <button class="relative p-2 rounded-lg ring-1 ring-white/10 hover:bg-white/10 text-white"
+                                    aria-label="Notifications">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                      viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                           d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                 </svg>
+
                                 @if($unreadCount > 0)
                                     <span class="absolute -top-0.5 -right-0.5 h-4 min-w-[1rem] px-1 rounded-full
-                                                 bg-gray-900 text-white text-[10px] font-semibold grid place-items-center leading-none
-                                                 dark:bg-white dark:text-black">
+                                                 bg-white text-black text-[10px] font-semibold grid place-items-center leading-none">
                                         {{ $unreadCount > 9 ? '9+' : $unreadCount }}
                                     </span>
                                 @endif
                             </button>
                         </x-slot>
 
-                        {{-- FORCE readable colors for everything inside the dropdown panel --}}
+                        {{-- Panel (no white outline/ring) --}}
                         <x-slot name="content">
-                            <div class="bg-white dark:bg-neutral-900
-                                        text-gray-800 dark:text-white
-                                        [&_*]:!text-gray-800 dark:[&_*]:!text-white
-                                        [&_svg]:!text-gray-600 dark:[&_svg]:!text-white/70">
-                                <div class="p-3">
-                                    <div class="flex items-center justify-between">
-                                        <div class="text-sm font-medium">Notifications</div>
+                            <div class="rounded-xl bg-neutral-900 text-white overflow-hidden shadow-2xl">
+                                {{-- Header --}}
+                                <div class="px-3 py-2 flex items-center justify-between border-b border-white/10">
+                                    <div class="text-sm font-medium">Notifications</div>
+                                    <div class="flex items-center gap-2">
+                                        @if (Route::has('notifications.markAllRead') && $unreadCount > 0)
+                                            <form method="POST" action="{{ route('notifications.markAllRead') }}">
+                                                @csrf
+                                                <button class="text-xs text-white/70 hover:text-white">
+                                                    Mark all read
+                                                </button>
+                                            </form>
+                                        @endif
                                         @if (Route::has('notifications.index'))
-                                            <a href="{{ route('notifications.index') }}" class="text-xs text-gray-600 hover:text-gray-800">View all</a>
+                                            <a href="{{ route('notifications.index') }}"
+                                               class="text-xs text-white/70 hover:text-white">
+                                                View all
+                                            </a>
                                         @endif
                                     </div>
                                 </div>
 
-                                <div class="max-h-80 overflow-y-auto">
+                                {{-- List --}}
+                                <div class="max-h-80 overflow-y-auto divide-y divide-white/10">
                                     @forelse($latest as $n)
-                                        <div class="px-3 py-2 flex items-start gap-3 {{ $n->read_at ? 'bg-white' : 'bg-gray-50' }} dark:{{ $n->read_at ? 'bg-neutral-900' : 'bg-white/5' }}">
-                                            <div class="mt-1 h-2 w-2 rounded-full {{ $n->read_at ? 'bg-gray-300 dark:bg-white/20' : 'bg-gray-900 dark:bg-white' }}"></div>
-                                            <div class="text-sm">
-                                                <div>
-                                                    {{ $n->data['message'] ?? \Illuminate\Support\Str::limit(json_encode($n->data), 80) }}
-                                                </div>
-                                                <div class="text-xs text-gray-500 dark:text-white/50">
-                                                    {{ optional($n->created_at)->diffForHumans() }}
+                                        @php
+                                            $isUnread = is_null($n->read_at);
+                                            $url = data_get($n->data, 'url')
+                                                ?? (data_get($n->data, 'item_id') ? route('items.show', data_get($n->data, 'item_id')) : null)
+                                                ?? (data_get($n->data, 'post_id') ? route('items.show', data_get($n->data, 'post_id')) : null)
+                                                ?? (data_get($n->data, 'conversation_id') ? route('conversations.show', data_get($n->data, 'conversation_id')) : null);
+                                            $message = data_get($n->data, 'message') ?? \Illuminate\Support\Str::limit(json_encode($n->data), 80);
+                                        @endphp
+
+                                        <div class="{{ $isUnread ? 'bg-white/5' : 'bg-neutral-900' }}">
+                                            <div class="px-3 py-2 flex items-start gap-3 group">
+                                                <span class="mt-1.5 h-2.5 w-2.5 rounded-full {{ $isUnread ? 'bg-emerald-500' : 'bg-white/20' }}"></span>
+
+                                                <div class="min-w-0 flex-1">
+                                                    @if ($url)
+                                                        <a href="{{ $url }}" class="block text-sm truncate hover:underline">
+                                                            {{ $message }}
+                                                        </a>
+                                                    @else
+                                                        <div class="text-sm truncate">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @endif
+
+                                                    <div class="text-xs text-white/50">
+                                                        {{ optional($n->created_at)->diffForHumans() }}
+                                                    </div>
                                                 </div>
 
-                                                @if (Route::has('notifications.read'))
-                                                    <form method="POST" action="{{ route('notifications.read', $n->id) }}" class="mt-1">
+                                                @if (Route::has('notifications.read') && $isUnread)
+                                                    <form method="POST" action="{{ route('notifications.read', $n->id) }}" class="shrink-0">
                                                         @csrf
                                                         @method('PATCH')
-                                                        <button class="text-xs">Mark as read</button>
+                                                        <button class="px-2 py-1 rounded-full text-[11px] ring-1 ring-white/10 text-white/80 hover:bg-white/10">
+                                                            Mark read
+                                                        </button>
                                                     </form>
                                                 @endif
                                             </div>
                                         </div>
                                     @empty
-                                        <div class="px-3 py-4 text-sm text-gray-600 dark:text-white/60">No notifications yet.</div>
+                                        <div class="p-6 text-center text-sm text-white/60">
+                                            No notifications yet.
+                                        </div>
                                     @endforelse
                                 </div>
 
-                                @if (Route::has('notifications.markAllRead') || Route::has('notifications.clear'))
-                                    <div class="p-3 flex items-center justify-end gap-3">
-                                        @if (Route::has('notifications.markAllRead'))
-                                            <form method="POST" action="{{ route('notifications.markAllRead') }}">
-                                                @csrf
-                                                <button class="text-xs">Mark all as read</button>
-                                            </form>
-                                        @endif
-                                        @if (Route::has('notifications.clear'))
-                                            <form method="POST" action="{{ route('notifications.clear') }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="text-xs">Clear</button>
-                                            </form>
-                                        @endif
+                                {{-- Footer --}}
+                                @if (Route::has('notifications.clear') && $latest->count())
+                                    <div class="px-3 py-2 border-t border-white/10 text-right">
+                                        <form method="POST" action="{{ route('notifications.clear') }}" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="text-xs text-white/70 hover:text-white">
+                                                Clear all
+                                            </button>
+                                        </form>
                                     </div>
                                 @endif
                             </div>
