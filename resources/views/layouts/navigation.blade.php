@@ -24,7 +24,7 @@
                     @endphp
 
                     <a href="{{ route('items.index') }}"
-                       class="{{ $linkBase }} {{ request()->routeIs('items.*') ? $active : $inactive }}">
+                       class="{{ $linkBase }} {{ request()->routeIs('items.index*') ? $active : $inactive }}">
                         Items
                     </a>
                     <a href="{{ route('items.create') }}"
