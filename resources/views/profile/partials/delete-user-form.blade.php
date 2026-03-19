@@ -1,8 +1,8 @@
 <section class="space-y-6">
     <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-white">Delete Account</h2>
+        <h2 class="text-lg font-medium text-gray-900 dark:text-white">Dzēst kontu</h2>
         <p class="mt-1 text-sm text-gray-600 dark:text-white/70">
-            Once your account is deleted, all of its resources and data will be permanently deleted.
+           Jūsu konts tiks neatgriezeniski dzēsts.
         </p>
     </header>
 
@@ -11,7 +11,7 @@
             x-data
             x-on:click.prevent="$dispatch('open-delete-modal')"
             class="px-4 py-2 rounded-full text-sm bg-rose-600 text-white hover:bg-rose-700">
-            Delete Account
+            Dzēst kontu
         </button>
 
         {{-- Modal --}}
@@ -24,9 +24,9 @@
 
             <div class="relative w-full sm:max-w-md mx-auto">
                 <div class="rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur-xl p-6">
-                    <h3 class="text-lg font-medium text-white">Are you sure?</h3>
+                    <h3 class="text-lg font-medium text-white">Vai esat pārliecināts?</h3>
                     <p class="mt-1 text-sm text-white/70">
-                        Please enter your password to confirm you would like to permanently delete your account.
+                        Lūdzu ievadiet savu paroli lai dzēstu kontu.
                     </p>
 
                     <form method="post" action="{{ route('profile.destroy') }}" class="mt-4 space-y-4">
@@ -34,7 +34,7 @@
                         @method('delete')
 
                         <div>
-                            <label class="block text-sm font-medium text-white/80">Password</label>
+                            <label class="block text-sm font-medium text-white/80">Parole</label>
                             <input
                                 id="password"
                                 name="password"
@@ -48,11 +48,11 @@
                             <button type="button"
                                     @click="open = false"
                                     class="px-4 py-2 rounded-full text-sm ring-1 ring-white/10 text-white/80 hover:bg-white/10">
-                                Cancel
+                                Atcelt
                             </button>
                             <button
                                 class="px-4 py-2 rounded-full text-sm bg-rose-600 text-white hover:bg-rose-700">
-                                Delete
+                                Dzēst
                             </button>
                         </div>
                     </form>

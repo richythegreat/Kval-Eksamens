@@ -24,7 +24,7 @@
                     ])
                 </div>
 
-                {{-- Delete Account (full width) --}}
+                {{-- Delete Account --}}
                 <div class="lg:col-span-2">
                     @includeFirst([
                         'profile.delete-user-form',

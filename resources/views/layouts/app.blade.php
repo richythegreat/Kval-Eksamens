@@ -15,7 +15,6 @@
 
         {{-- Hero / page header --}}
         <header class="relative overflow-hidden">
-            {{-- soft top gradients for depth (no images) --}}
             <div aria-hidden="true" class="pointer-events-none absolute inset-0">
                 <div class="absolute -top-40 -left-40 h-[34rem] w-[34rem] rounded-full bg-indigo-500/20 blur-3xl"></div>
                 <div class="absolute -top-56 right-0 h-[34rem] w-[34rem] rounded-full bg-fuchsia-500/10 blur-3xl"></div>
@@ -28,13 +27,12 @@
                             {{ $header ?? 'Lost & Found' }}
                         </h1>
                         <p class="text-white/70 text-sm sm:text-base max-w-2xl">
-                            Post lost items, report found items, and connect privately.
+                            Publicējiet pazaudētus priekšmetus, ziņojiet par atrastajiem priekšmetiem un sazinieties privāti.
                         </p>
                     </div>
                 </div>
             </div>
 
-            {{-- subtle divider line --}}
             <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
         </header>
 

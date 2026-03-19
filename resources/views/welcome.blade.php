@@ -6,7 +6,7 @@
                 Lost &amp; Found
             </h1>
             <p class="text-sm text-gray-600 dark:text-white/70">
-                Find what’s lost. Return what’s found.
+                Atrodiet kas pazaudēts, atdodiet kas atrasts.
             </p>
 
             <div class="flex items-center justify-center gap-3">
@@ -15,20 +15,20 @@
                        class="px-5 py-2 rounded-full text-sm font-medium
                               bg-gray-900 text-white ring-1 ring-gray-900 hover:bg-black
                               dark:bg-white dark:text-black dark:ring-white dark:hover:bg-white/90">
-                        Go to dashboard
+                        Dodieties uz informācijas paneli
                     </a>
                 @else
                     <a href="{{ route('login') }}"
                        class="px-5 py-2 rounded-full text-sm ring-1 ring-gray-200 text-gray-800 hover:bg-gray-100
                               dark:ring-white/10 dark:text-white dark:hover:bg-white/10">
-                        Log in
+                        Pieraksties
                     </a>
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}"
                            class="px-5 py-2 rounded-full text-sm font-medium
                                   bg-gray-900 text-white ring-1 ring-gray-900 hover:bg-black
                                   dark:bg-white dark:text-black dark:ring-white dark:hover:bg-white/90">
-                            Register
+                            Reģistrējies
                         </a>
                     @endif
                 @endauth

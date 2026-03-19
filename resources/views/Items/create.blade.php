@@ -11,16 +11,16 @@
 
             {{-- Title --}}
             <div>
-                <label class="block text-sm font-medium text-white/80 mb-1">Title</label>
+                <label class="block text-sm font-medium text-white/80 mb-1">Nosaukums</label>
                 <input type="text" name="title" value="{{ old('title') }}"
                        class="w-full rounded-xl bg-white/5 text-white placeholder-white/40 ring-1 ring-white/10
                               focus:ring-2 focus:ring-white/40 focus:outline-none px-3 py-2">
-                @error('title') <p class="mt-1 text-sm text-rose-300">{{ $message }}</p> @enderror
+                @error('Title') <p class="mt-1 text-sm text-rose-300">{{ $message }}</p> @enderror
             </div>
 
             {{-- Description --}}
             <div>
-                <label class="block text-sm font-medium text-white/80 mb-1">Description</label>
+                <label class="block text-sm font-medium text-white/80 mb-1">Apakšraksts</label>
                 <textarea name="description" rows="4"
                           class="w-full rounded-xl bg-white/5 text-white placeholder-white/40 ring-1 ring-white/10
                                  focus:ring-2 focus:ring-white/40 focus:outline-none px-3 py-2">{{ old('description') }}</textarea>
@@ -30,7 +30,7 @@
             {{-- Category & City --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-white/80 mb-1">Category</label>
+                    <label class="block text-sm font-medium text-white/80 mb-1">Kategorija</label>
                     <input type="text" name="category" value="{{ old('category') }}"
                            class="w-full rounded-xl bg-white/5 text-white placeholder-white/40 ring-1 ring-white/10
                                   focus:ring-2 focus:ring-white/40 focus:outline-none px-3 py-2">
@@ -47,11 +47,11 @@
                     }"
                     class="relative"
                 >
-                    <label class="block text-sm font-medium text-white/80 mb-1">City (Latvia)</label>
+                    <label class="block text-sm font-medium text-white/80 mb-1">Pilsēta (Latvija)</label>
 
                     <input x-model="search" @focus="open = true" @input="open = true"
                            @blur="setTimeout(() => open = false, 120)" type="text"
-                           placeholder="Search and select city..." autocomplete="off"
+                           placeholder="atrodi pilsētu..." autocomplete="off"
                            class="w-full rounded-xl bg-white/5 text-white placeholder-white/40 ring-1 ring-white/10
                                   focus:ring-2 focus:ring-white/40 focus:outline-none px-3 py-2">
 
@@ -63,7 +63,7 @@
                                  class="px-3 py-2 text-sm text-white/90 hover:bg-white/10 cursor-pointer"></div>
                         </template>
                         <div class="px-3 py-2 text-xs text-white/50" x-show="cities.filter(c => c.toLowerCase().includes((search||'').toLowerCase())).length === 0">
-                            No matches
+                            Nav atrasts
                         </div>
                     </div>
 
@@ -74,19 +74,19 @@
 
             {{-- Status --}}
             <div>
-                <label class="block text-sm font-medium text-white/80 mb-1">Status</label>
+                <label class="block text-sm font-medium text-white/80 mb-1">Statuss</label>
                 <select name="status"
                         class="w-full rounded-xl bg-white/5 text-white ring-1 ring-white/10
                                focus:ring-2 focus:ring-white/40 focus:outline-none px-3 py-2">
-                    <option value="lost"  {{ old('status') == 'lost'  ? 'selected' : '' }}>Lost</option>
-                    <option value="found" {{ old('status') == 'found' ? 'selected' : '' }}>Found</option>
+                    <option value="lost"  {{ old('status') == 'lost'  ? 'selected' : '' }}>Pazaudēts</option>
+                    <option value="found" {{ old('status') == 'found' ? 'selected' : '' }}>Atrasts</option>
                 </select>
                 @error('status') <p class="mt-1 text-sm text-rose-300">{{ $message }}</p> @enderror
             </div>
 
             {{-- Image --}}
             <div>
-                <label class="block text-sm font-medium text-white/80 mb-1">Image (optional)</label>
+                <label class="block text-sm font-medium text-white/80 mb-1">Bilde</label>
                 <input type="file" name="image"
                        class="w-full rounded-xl bg-white/5 text-white file:bg-white file:text-black file:border-0 file:rounded-lg
                               ring-1 ring-white/10 focus:ring-2 focus:ring-white/40 focus:outline-none px-3 py-2">
@@ -97,11 +97,11 @@
             <div class="flex items-center justify-center gap-3">
                 <a href="{{ route('items.index') }}"
                    class="px-4 py-2 rounded-full text-sm ring-1 ring-white/10 text-white/80 hover:bg-white/10 transition">
-                    Cancel
+                    Atcelt
                 </a>
                 <button type="submit"
                         class="px-5 py-2 rounded-full text-sm font-medium bg-white text-black hover:bg-white/90 transition ring-1 ring-white/10">
-                    Save
+                    Saglabāt
                 </button>
             </div>
         </form>

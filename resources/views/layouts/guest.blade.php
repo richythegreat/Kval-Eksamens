@@ -26,7 +26,7 @@
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-900 antialiased dark:bg-neutral-950 dark:text-white">
-    {{-- Simple header with Login/Register links (optional) --}}
+    {{-- Login/Register links --}}
     <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-gray-200 dark:bg-neutral-950/70 dark:border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
             <a href="{{ url('/') }}" class="flex items-center gap-2">
@@ -36,11 +36,11 @@
             <div class="flex items-center gap-2">
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ route('dashboard') }}" class="px-3 py-1.5 rounded-full text-sm ring-1 ring-gray-200 hover:bg-gray-100 dark:ring-white/10 dark:hover:bg-white/10">Dashboard</a>
+                        <a href="{{ route('dashboard') }}" class="px-3 py-1.5 rounded-full text-sm ring-1 ring-gray-200 hover:bg-gray-100 dark:ring-white/10 dark:hover:bg-white/10">Informācijas panelis</a>
                     @else
-                        <a href="{{ route('login') }}" class="px-3 py-1.5 rounded-full text-sm ring-1 ring-gray-200 hover:bg-gray-100 dark:ring-white/10 dark:hover:bg-white/10">Log in</a>
+                        <a href="{{ route('login') }}" class="px-3 py-1.5 rounded-full text-sm ring-1 ring-gray-200 hover:bg-gray-100 dark:ring-white/10 dark:hover:bg-white/10">Pierakstīties</a>
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="px-3 py-1.5 rounded-full text-sm bg-gray-900 text-white ring-1 ring-gray-900 hover:bg-black dark:bg-white dark:text-black dark:ring-white dark:hover:bg-white/90">Register</a>
+                            <a href="{{ route('register') }}" class="px-3 py-1.5 rounded-full text-sm bg-gray-900 text-white ring-1 ring-gray-900 hover:bg-black dark:bg-white dark:text-black dark:ring-white dark:hover:bg-white/90">Reģistrēties</a>
                         @endif
                     @endauth
                 @endif
@@ -48,15 +48,15 @@
         </div>
     </header>
 
-    {{-- Nice subtle hero band --}}
+    {{-- hero band --}}
     <div class="relative overflow-hidden">
         <div aria-hidden="true" class="pointer-events-none absolute inset-0">
             <div class="absolute -top-40 -left-40 h-[28rem] w-[28rem] rounded-full bg-indigo-500/15 blur-3xl"></div>
             <div class="absolute -top-56 right-0 h-[28rem] w-[28rem] rounded-full bg-fuchsia-500/10 blur-3xl"></div>
         </div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight">Welcome</h1>
-            <p class="text-sm text-gray-600 dark:text-white/70">Sign in or create an account to continue.</p>
+            <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight">Sveicināti!</h1>
+            <p class="text-sm text-gray-600 dark:text-white/70">Pierakstieties vai reģistrējaties.</p>
         </div>
         <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent dark:via-white/10"></div>
     </div>

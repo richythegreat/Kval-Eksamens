@@ -22,7 +22,7 @@
                 </div>
                 <a href="{{ route('conversations.index') }}"
                    class="px-3 py-1.5 rounded-full text-sm ring-1 ring-white/10 text-white/80 hover:bg-white/10 hover:text-white transition">
-                    ← Back
+                    ← Atpakaļ
                 </a>
             </div>
         </div>
@@ -57,7 +57,7 @@
             >
             <button type="submit"
                     class="px-4 py-2 rounded-full text-sm font-medium bg-white text-black hover:bg-white/90 transition ring-1 ring-white/10">
-                Send
+                Sūtīt
             </button>
         </form>
     </div>

@@ -1,8 +1,8 @@
 <section class="space-y-6">
     <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-white">Profile Information</h2>
+        <h2 class="text-lg font-medium text-gray-900 dark:text-white">Profila informācija</h2>
         <p class="mt-1 text-sm text-gray-600 dark:text-white/70">
-            Update your account’s profile information and email address.
+            Atjauniniet savu informāciju.
         </p>
     </header>
 
@@ -16,7 +16,7 @@
             @method('patch')
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-white/80">Name</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-white/80">Vārds</label>
                 <input
                     id="name"
                     name="name"
@@ -33,7 +33,7 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-white/80">Email</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-white/80">Epasts</label>
                 <input
                     id="email"
                     name="email"
@@ -50,16 +50,16 @@
                 @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                     <div class="mt-3 text-sm">
                         <p class="text-gray-600 dark:text-white/70">
-                            Your email address is unverified.
+                            Jūsu epasta adrese nav verificēta.
                             <button form="send-verification"
                                     class="underline underline-offset-2 text-gray-900 hover:text-black dark:text-white">
-                                Click here to re-send the verification email.
+                                Uzklikšķiniet lai nosūtītu verifikācijas kodu uz epastu.
                             </button>
                         </p>
 
                         @if (session('status') === 'verification-link-sent')
                             <p class="mt-2 text-green-600 dark:text-green-400">
-                                A new verification link has been sent to your email address.
+                                Jauns epasts tika nosūtīts.
                             </p>
                         @endif
                     </div>
@@ -74,7 +74,7 @@
                 </button>
 
                 @if (session('status') === 'profile-updated')
-                    <p class="text-sm text-green-600 dark:text-green-400">Saved.</p>
+                    <p class="text-sm text-green-600 dark:text-green-400">Saglabāts.</p>
                 @endif
             </div>
         </form>

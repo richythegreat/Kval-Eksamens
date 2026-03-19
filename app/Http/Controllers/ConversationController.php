@@ -12,7 +12,6 @@ use App\Notifications\NewMessageNotification;
 
 class ConversationController extends Controller
 {
-    // List all conversations for the logged-in user
     public function index()
     {
         $conversations = Auth::user()
@@ -28,12 +27,10 @@ class ConversationController extends Controller
         return view('conversations.index', compact('conversations'));
     }
 
-    // Start (or reuse) a conversation between auth user and the item owner
     public function start(Item $item)
     {
         $user = Auth::user();
 
-        // Prevent messaging yourself
         if ($item->user_id === $user->id) {
             return redirect()
                 ->back()
@@ -42,7 +39,6 @@ class ConversationController extends Controller
 
         $otherUserId = $item->user_id;
 
-        // Find existing conversation that has BOTH users
         $existing = Conversation::whereHas('users', fn ($q) => $q->where('users.id', $user->id))
             ->whereHas('users', fn ($q) => $q->where('users.id', $otherUserId))
             ->first();
@@ -51,21 +47,14 @@ class ConversationController extends Controller
             return redirect()->route('conversations.show', $existing);
         }
 
-        // Create new conversation and attach both users
         $conversation = Conversation::create();
         $conversation->users()->attach([$user->id, $otherUserId]);
 
-        // Optional: first message referencing item
-        // Message::create([
-        //     'conversation_id' => $conversation->id,
-        //     'user_id' => $user->id,
-        //     'body' => "Hi! I'm contacting you about: {$item->title}",
-        // ]);
+        
 
         return redirect()->route('conversations.show', $conversation);
     }
 
-    // Show a single conversation (only if user is a participant)
     public function show(Conversation $conversation)
     {
         $userId = Auth::id();
@@ -79,7 +68,6 @@ class ConversationController extends Controller
             'messages.user'
         ]);
 
-        // Mark other user's messages as read (simple approach)
         Message::where('conversation_id', $conversation->id)
             ->whereNull('read_at')
             ->where('user_id', '!=', $userId)
@@ -88,7 +76,6 @@ class ConversationController extends Controller
         return view('conversations.show', compact('conversation'));
     }
 
-    // Send a new message
     public function storeMessage(Request $request, Conversation $conversation)
 {
     $userId = Auth::id();
@@ -107,7 +94,6 @@ class ConversationController extends Controller
         'body' => $validated['body'],
     ]);
 
-    // Notify the other user (not sender)
     $otherUser = $conversation->users()->where('users.id', '!=', $userId)->first();
     if ($otherUser) {
         $preview = mb_substr($message->body, 0, 60);
@@ -118,7 +104,6 @@ class ConversationController extends Controller
         ));
     }
 
-    // If you're using AJAX, return JSON:
     return response()->json([
         'id' => $message->id,
         'body' => $message->body,

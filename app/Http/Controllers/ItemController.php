@@ -47,7 +47,7 @@ class ItemController extends Controller
 
         return redirect()
             ->route('items.index')
-            ->with('success', 'Post created successfully!');
+            ->with('success', 'Sludinājums izveidots!');
     }
 
     public function show(Item $item): View
@@ -86,7 +86,7 @@ class ItemController extends Controller
 
         return redirect()
             ->route('items.show', $item)
-            ->with('success', 'Post updated successfully!');
+            ->with('success', 'Sludinājums atjaunināts!');
     }
 
     public function destroy(Item $item): RedirectResponse
@@ -102,7 +102,7 @@ class ItemController extends Controller
 
         return redirect()
             ->route('items.index')
-            ->with('success', 'Post deleted successfully!');
+            ->with('success', 'Sludinājums dzēsts!');
     }
 
     private function validateItem(Request $request, array $validLocations): array

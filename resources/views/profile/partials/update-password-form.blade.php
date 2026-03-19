@@ -1,8 +1,8 @@
 <section class="space-y-6">
     <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-white">Update Password</h2>
+        <h2 class="text-lg font-medium text-gray-900 dark:text-white">Atjaunināt paroli</h2>
         <p class="mt-1 text-sm text-gray-600 dark:text-white/70">
-            Ensure your account is using a long, random password to stay secure.
+            ELūdzu pārliecinies ka jūsu parole ir dzoša.
         </p>
     </header>
 
@@ -12,7 +12,7 @@
             @method('put')
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-white/80">Current Password</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-white/80">Pašreizējā parole</label>
                 <input
                     id="current_password"
                     name="current_password"
@@ -26,7 +26,7 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-white/80">New Password</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-white/80">Jaunā parole</label>
                 <input
                     id="password"
                     name="password"
@@ -40,7 +40,7 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-white/80">Confirm Password</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-white/80">Apstipriniet paroli</label>
                 <input
                     id="password_confirmation"
                     name="password_confirmation"
@@ -60,7 +60,7 @@
                 </button>
 
                 @if (session('status') === 'password-updated')
-                    <p class="text-sm text-green-600 dark:text-green-400">Saved.</p>
+                    <p class="text-sm text-green-600 dark:text-green-400">Saglabāts.</p>
                 @endif
             </div>
         </form>

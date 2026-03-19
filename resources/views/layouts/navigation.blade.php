@@ -11,11 +11,11 @@
                     <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-400 shadow-inner shadow-black/20"></div>
                     <div class="leading-tight">
                         <div class="font-semibold tracking-tight">Lost &amp; Found</div>
-                        <div class="text-xs text-gray-500 dark:text-white/60 -mt-0.5">Latvia</div>
+                        <div class="text-xs text-gray-500 dark:text-white/60 -mt-0.5">Latvija</div>
                     </div>
                 </a>
 
-                {{-- Primary nav (md+) --}}
+                {{-- Primary nav  --}}
                 <div class="hidden md:flex items-center gap-1 ml-6">
                     @php
                         $linkBase = 'px-3 py-1.5 rounded-full text-sm ring-1 transition';
@@ -25,15 +25,15 @@
 
                     <a href="{{ route('items.index') }}"
                        class="{{ $linkBase }} {{ request()->routeIs('items.index*') ? $active : $inactive }}">
-                        Items
+                        Sludinājumi
                     </a>
                     <a href="{{ route('items.create') }}"
                        class="{{ $linkBase }} {{ request()->routeIs('items.create') ? $active : $inactive }}">
-                        Add
+                        Pievienot
                     </a>
                     <a href="{{ route('conversations.index') }}"
                        class="{{ $linkBase }} {{ request()->routeIs('conversations.*') ? $active : $inactive }}">
-                        Messages
+                        Saziņa
                     </a>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                             type="text"
                             name="query"
                             value="{{ request('query') }}"
-                            placeholder="Search items..."
+                            placeholder="Meklēt..."
                             class="w-64 rounded-full pl-4 pr-10 py-2 text-sm
                                    bg-white ring-1 ring-gray-300 placeholder-gray-400 text-gray-900
                                    focus:ring-2 focus:ring-blue-500 focus:outline-none
@@ -91,25 +91,25 @@
                             </button>
                         </x-slot>
 
-                        {{-- Panel (no white outline/ring) --}}
+                        {{-- Panel --}}
                         <x-slot name="content">
                             <div class="rounded-xl bg-neutral-900 text-white overflow-hidden shadow-2xl">
                                 {{-- Header --}}
                                 <div class="px-3 py-2 flex items-center justify-between border-b border-white/10">
-                                    <div class="text-sm font-medium">Notifications</div>
+                                    <div class="text-sm font-medium">Notifikācijas</div>
                                     <div class="flex items-center gap-2">
                                         @if (Route::has('notifications.markAllRead') && $unreadCount > 0)
                                             <form method="POST" action="{{ route('notifications.markAllRead') }}">
                                                 @csrf
                                                 <button class="text-xs text-white/70 hover:text-white">
-                                                    Mark all read
+                                                    Atdzīmēt visus kā izlasītus
                                                 </button>
                                             </form>
                                         @endif
                                         @if (Route::has('notifications.index'))
                                             <a href="{{ route('notifications.index') }}"
                                                class="text-xs text-white/70 hover:text-white">
-                                                View all
+                                                Apskatīt visus
                                             </a>
                                         @endif
                                     </div>
@@ -152,7 +152,7 @@
                                                         @csrf
                                                         @method('PATCH')
                                                         <button class="px-2 py-1 rounded-full text-[11px] ring-1 ring-white/10 text-white/80 hover:bg-white/10">
-                                                            Mark read
+                                                            Atdzīmēt kā izlasītu
                                                         </button>
                                                     </form>
                                                 @endif
@@ -160,7 +160,7 @@
                                         </div>
                                     @empty
                                         <div class="p-6 text-center text-sm text-white/60">
-                                            No notifications yet.
+                                            Pagaidām nav paziņojumu.
                                         </div>
                                     @endforelse
                                 </div>
@@ -172,7 +172,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button class="text-xs text-white/70 hover:text-white">
-                                                Clear all
+                                                Dzēst visus
                                             </button>
                                         </form>
                                     </div>
@@ -197,12 +197,12 @@
                         </button>
                     </x-slot>
 
-                    {{-- FORCE readable colors inside user dropdown too --}}
+                    {{-- user dropdown --}}
                     <x-slot name="content">
                         <div class="bg-white dark:bg-neutral-900
                                     text-gray-800 dark:text-white
                                     [&_*]:!text-gray-800 dark:[&_*]:!text-white">
-                            <x-dropdown-link :href="route('profile.edit')">Profile</x-dropdown-link>
+                            <x-dropdown-link :href="route('profile.edit')">Profils</x-dropdown-link>
 
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -234,14 +234,14 @@
     <div x-show="open" x-cloak class="md:hidden border-t border-gray-200 bg-white text-gray-800
                                     dark:border-white/10 dark:bg-neutral-950/95 dark:text-white dark:backdrop-blur-xl">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-2">
-            <a href="{{ route('items.index') }}" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/10">Items</a>
-            <a href="{{ route('items.create') }}" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/10">Add</a>
-            <a href="{{ route('conversations.index') }}" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/10">Messages</a>
+            <a href="{{ route('items.index') }}" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/10">Sludinājumi</a>
+            <a href="{{ route('items.create') }}" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/10">Pievienot</a>
+            <a href="{{ route('conversations.index') }}" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/10">Saziņa</a>
 
             @auth
                 @if (Route::has('notifications.index'))
                     <a href="{{ route('notifications.index') }}" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/10">
-                        Notifications
+                        notifikācijas
                     </a>
                 @endif
             @endauth

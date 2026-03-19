@@ -6,7 +6,7 @@
             <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-white">{{ $item->title }}</h1>
             <a href="{{ route('items.index') }}"
                class="inline-flex items-center justify-center px-3 py-1.5 rounded-full text-sm ring-1 ring-white/10 text-white/80 hover:bg-white/10 hover:text-white transition">
-                ← Back
+                ← Atpakaļ
             </a>
         </div>
 
@@ -23,7 +23,7 @@
                     </div>
                 @else
                     <div class="h-[22rem] md:h-[26rem] rounded-2xl bg-white/5 ring-1 ring-white/10 grid place-items-center text-white/50">
-                        No Image
+                        Nav bildes
                     </div>
                 @endif>
             </div>
@@ -53,7 +53,7 @@
                     <div class="pt-2 flex flex-wrap items-center justify-between gap-3">
                         <a href="{{ route('items.index') }}"
                            class="px-3 py-1.5 rounded-full text-sm ring-1 ring-white/10 text-white/80 hover:bg-white/10 hover:text-white transition">
-                            ← Back to posts
+                            ← Sludinājumi
                         </a>
 
                         <div class="flex items-center gap-3">
@@ -62,7 +62,7 @@
                                     @csrf
                                     <button
                                         class="px-4 py-2 rounded-full text-sm font-medium bg-white text-black hover:bg-white/90 transition ring-1 ring-white/10">
-                                        Message owner
+                                        Sazināties ar publicētāju
                                     </button>
                                 </form>
                             @endif
@@ -70,7 +70,7 @@
                             @if ($item->user_id === auth()->id())
                                 <a href="{{ route('items.edit', $item->id) }}"
                                    class="px-3 py-1.5 rounded-full text-sm ring-1 ring-white/10 text-amber-300/90 hover:bg-white/10 transition">
-                                    Edit
+                                    Rediģēt
                                 </a>
 
                                 <form action="{{ route('items.destroy', $item->id) }}" method="POST"
@@ -79,7 +79,7 @@
                                     @method('DELETE')
                                     <button type="submit"
                                             class="px-3 py-1.5 rounded-full text-sm ring-1 ring-white/10 text-rose-300/90 hover:bg-white/10 transition">
-                                        Delete
+                                        Dzēst
                                     </button>
                                 </form>
                             @endif

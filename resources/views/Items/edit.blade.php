@@ -2,7 +2,7 @@
 <x-app-layout>
     <div class="max-w-3xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
         <div class="mb-8 text-center">
-            <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-white">Edit Item</h1>
+            <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-white">Rediģēt</h1>
         </div>
 
         <form action="{{ route('items.update', $item->id) }}" method="POST" enctype="multipart/form-data"
@@ -12,7 +12,7 @@
 
             {{-- Title --}}
             <div>
-                <label class="block text-sm font-medium text-white/80 mb-1">Title</label>
+                <label class="block text-sm font-medium text-white/80 mb-1">Virsraksts</label>
                 <input type="text" name="title" value="{{ old('title', $item->title) }}"
                        class="w-full rounded-xl bg-white/5 text-white placeholder-white/40 ring-1 ring-white/10
                               focus:ring-2 focus:ring-white/40 focus:outline-none px-3 py-2">
@@ -21,7 +21,7 @@
 
             {{-- Description --}}
             <div>
-                <label class="block text-sm font-medium text-white/80 mb-1">Description</label>
+                <label class="block text-sm font-medium text-white/80 mb-1">Apakšraksts</label>
                 <textarea name="description" rows="4"
                           class="w-full rounded-xl bg-white/5 text-white placeholder-white/40 ring-1 ring-white/10
                                  focus:ring-2 focus:ring-white/40 focus:outline-none px-3 py-2">{{ old('description', $item->description) }}</textarea>
@@ -31,7 +31,7 @@
             {{-- Category & City --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-white/80 mb-1">Category</label>
+                    <label class="block text-sm font-medium text-white/80 mb-1">Kategorija</label>
                     <input type="text" name="category" value="{{ old('category', $item->category) }}"
                            class="w-full rounded-xl bg-white/5 text-white placeholder-white/40 ring-1 ring-white/10
                                   focus:ring-2 focus:ring-white/40 focus:outline-none px-3 py-2">
@@ -48,11 +48,11 @@
                     }"
                     class="relative"
                 >
-                    <label class="block text-sm font-medium text-white/80 mb-1">City (Latvia)</label>
+                    <label class="block text-sm font-medium text-white/80 mb-1">Pilsēta (Latvija)</label>
 
                     <input x-model="search" @focus="open = true" @input="open = true"
                            @blur="setTimeout(() => open = false, 120)" type="text"
-                           placeholder="Search and select city..." autocomplete="off"
+                           placeholder="Atrodi pilsētu..." autocomplete="off"
                            class="w-full rounded-xl bg-white/5 text-white placeholder-white/40 ring-1 ring-white/10
                                   focus:ring-2 focus:ring-white/40 focus:outline-none px-3 py-2">
 
@@ -64,7 +64,7 @@
                                  class="px-3 py-2 text-sm text-white/90 hover:bg-white/10 cursor-pointer"></div>
                         </template>
                         <div class="px-3 py-2 text-xs text-white/50" x-show="cities.filter(c => c.toLowerCase().includes((search||'').toLowerCase())).length === 0">
-                            No matches
+                            Nav atrasts
                         </div>
                     </div>
 
@@ -75,19 +75,19 @@
 
             {{-- Status --}}
             <div>
-                <label class="block text-sm font-medium text-white/80 mb-1">Status</label>
+                <label class="block text-sm font-medium text-white/80 mb-1">Statuss</label>
                 <select name="status"
                         class="w-full rounded-xl bg-white/5 text-white ring-1 ring-white/10
                                focus:ring-2 focus:ring-white/40 focus:outline-none px-3 py-2">
-                    <option value="lost"  {{ old('status', $item->status) == 'lost'  ? 'selected' : '' }}>Lost</option>
-                    <option value="found" {{ old('status', $item->status) == 'found' ? 'selected' : '' }}>Found</option>
+                    <option value="lost"  {{ old('status', $item->status) == 'lost'  ? 'selected' : '' }}>Pazaudēts</option>
+                    <option value="found" {{ old('status', $item->status) == 'found' ? 'selected' : '' }}>Atrasts</option>
                 </select>
                 @error('status') <p class="mt-1 text-sm text-rose-300">{{ $message }}</p> @enderror
             </div>
 
             {{-- Image Upload --}}
             <div>
-                <label class="block text-sm font-medium text-white/80 mb-1">Image (optional)</label>
+                <label class="block text-sm font-medium text-white/80 mb-1">Bilde</label>
                 <input type="file" name="image"
                        class="w-full rounded-xl bg-white/5 text-white file:bg-white file:text-black file:border-0 file:rounded-lg
                               ring-1 ring-white/10 focus:ring-2 focus:ring-white/40 focus:outline-none px-3 py-2">
@@ -109,7 +109,7 @@
                 </a>
                 <button type="submit"
                         class="px-5 py-2 rounded-full text-sm font-medium bg-white text-black hover:bg-white/90 transition ring-1 ring-white/10">
-                    Update
+                    Atjaunināt
                 </button>
             </div>
         </form>
