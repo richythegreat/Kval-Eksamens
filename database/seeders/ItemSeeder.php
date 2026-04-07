@@ -27,6 +27,7 @@ class ItemSeeder extends Seeder
             'category' => 'Personal Items',
             'status' => 'lost',
             'city' => 'Rīga',
+            'image' => 'items/wallet.jpg',
             'user_id' => $users->random()->id,
         ]);
 
@@ -36,6 +37,7 @@ class ItemSeeder extends Seeder
             'category' => 'Jewelry',
             'status' => 'lost',
             'city' => 'Jūrmala',
+            'image' => 'items/phone.jpg',
             'user_id' => $users->random()->id,
         ]);
 
@@ -46,6 +48,7 @@ class ItemSeeder extends Seeder
             'category' => 'Electronics',
             'status' => 'found',
             'city' => 'Rīga',
+            'image' => 'items/wallet.jpg',
             'user_id' => $users->random()->id,
         ]);
 
@@ -55,6 +58,7 @@ class ItemSeeder extends Seeder
             'category' => 'Bags',
             'status' => 'found',
             'city' => 'Liepāja',
+            'image' => 'items/ring.jpg',
             'user_id' => $users->random()->id,
         ]);
     }

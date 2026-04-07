@@ -18,7 +18,13 @@ class ItemFactory extends Factory
             'category' => $this->faker->word(),
             'status' => $this->faker->randomElement(['lost', 'found']),
             'city' => $this->faker->city(),
+            'image' => 'items/' . $this->faker->randomElement([
+            'wallet.jpg',
+            'phone.jpg',
+            'ring.jpg',
+        ]),
             'user_id' => User::factory(),
+            
         ];
     }
 }
