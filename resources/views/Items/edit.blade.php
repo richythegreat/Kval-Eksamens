@@ -105,7 +105,7 @@
             <div class="flex items-center justify-center gap-3">
                 <a href="{{ route('items.show', $item->id) }}"
                    class="px-4 py-2 rounded-full text-sm ring-1 ring-white/10 text-white/80 hover:bg-white/10 transition">
-                    Cancel
+                    Atcelt
                 </a>
                 <button type="submit"
                         class="px-5 py-2 rounded-full text-sm font-medium bg-white text-black hover:bg-white/90 transition ring-1 ring-white/10">

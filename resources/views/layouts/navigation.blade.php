@@ -208,7 +208,7 @@
                                 @csrf
                                 <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault(); this.closest('form').submit();">
-                                    Log Out
+                                    Izrakstīties
                                 </x-dropdown-link>
                             </form>
                         </div>

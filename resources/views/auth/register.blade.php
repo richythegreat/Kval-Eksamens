@@ -20,7 +20,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-white/80">parloe</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-white/80">parole</label>
                     <input name="password" type="password" required
                            class="w-full rounded-xl bg-white text-gray-900 placeholder-gray-400 ring-1 ring-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 px-3 py-2 dark:bg-white/5 dark:text-white dark:placeholder-white/40 dark:ring-white/10 dark:focus:ring-white/40">
                     @error('password') <p class="mt-1 text-sm text-rose-400">{{ $message }}</p>@enderror
