@@ -3,9 +3,8 @@
 ## Projekta apraksts
 **Lost & Found** ir tīmekļa lietotne, kas palīdz cilvēkiem atrast un atgūt pazaudētas mantas.
 Platforma ļauj lietotājiem:
-- publicēt paziņojumus par atrastām vai pazaudētām mantām,
-- meklēt citus paziņojumus,
-- un sazināties ar citiem lietotājiem privāti, ja ir atrasta vai atgūta manta.
+- publicēt sludinājumus par atrastām vai pazaudētām mantām,
+- sazināties ar citiem lietotājiem privāti, ja ir atrasta vai atgūta manta.
 
 ---
 
@@ -17,15 +16,15 @@ Izveidot drošu, lietotājam draudzīgu sistēmu, kas apvieno cilvēkus, kuri ir
 ## Galvenās funkcijas
 
 ### Postu (ierakstu) pārvaldība
-- Lietotāji var izveidot jaunu postu (ierakstu) par pazaudētu vai atrastu mantu.
-- Ierakstam var pievienot attēlu vai atstāt bez attēla.
-- Postus var rediģēt un dzēst.
-- Ierakstos tiek norādīts statuss: “Lost” vai “Found”.
-- Ierakstiem var pievienot pilsētu..
+- Lietotāji var izveidot jaunu sludinājumu par pazaudētu vai atrastu mantu.
+- Sludinājumam var pievienot attēlu vai atstāt bez attēla.
+- Sludinājumu var rediģēt un dzēst.
+- Sludinājumos  tiek norādīts statuss: “Atrasts” vai “Pazaudēts”.
+- Sludinājumam var pievienot pilsētu..
 
 ### Privātā čatošana
 - Kad lietotājs atrod savu mantu, viņš var privāti sazināties ar personu, kas to ievietoja.
-- Ziņas notiek drošā iekšējā čata sistēmā, nepublicējot kontaktinformāciju.
+- Ziņas notiek iekšējā čata sistēmā, nepublicējot kontaktinformāciju.
 
 ### Meklēšana 
 - Lietotāji var izmantot meklēšanas joslu (search bar), lai atrastu noteiktus priekšmetus pēc nosaukuma vai apraksta.
@@ -60,8 +59,9 @@ GitHub – versiju kontrole
 ---
 
 ## Papildu funkcionalitāte
-- “Atzīmēt kā atrisinātu” poga, kad manta atgūta.
-- Statistika: biežākās mantu kategorijas, aktīvākās pilsētas.
+- Matching sistēma: sistēma pārbauda vai tavam sludinājumam ir kāds cits līdzīgs sludinājums ar pretēju tipu(lost/found), un ja ir tad sistēma nosūta paziņojumu lietotājiem
+- Paziņojumu sistēma: nosūta paziņojumus ja ir atrasta sludinājumu sakritība, vai ja ir pienākusi kāda ziņa.
+
 
 ---
 
@@ -79,8 +79,9 @@ GitHub – versiju kontrole
 3. CRUD sistēma ierakstiem
 4. Meklēšana un filtrēšana
 5. Čata funkcionalitāte
-6. Profila panelis
-7. Testēšana un UI uzlabojumi
+6. Matching funkcionalitāte
+7. Paziņojumu funkcionalitāte
+8. Testēšana un UI uzlabojumi
 
 ---
 
